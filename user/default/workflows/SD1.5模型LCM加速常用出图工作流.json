@@ -1,0 +1,760 @@
+{
+  "last_node_id": 148,
+  "last_link_id": 253,
+  "nodes": [
+    {
+      "id": 131,
+      "type": "VAEEncode",
+      "pos": [
+        480,
+        490
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "pixels",
+          "type": "IMAGE",
+          "link": 223,
+          "label": "图像"
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 253,
+          "label": "VAE"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            248
+          ],
+          "shape": 3,
+          "label": "Latent",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEEncode"
+      }
+    },
+    {
+      "id": 130,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        0,
+        490
+      ],
+      "size": {
+        "0": 420,
+        "1": 70
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [
+            209
+          ],
+          "shape": 3,
+          "label": "放大模型"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UpscaleModelLoader"
+      },
+      "widgets_values": [
+        "RealESRGAN_x4plus_anime_6B.pth"
+      ]
+    },
+    {
+      "id": 129,
+      "type": "ImageUpscaleWithModel",
+      "pos": [
+        160,
+        490
+      ],
+      "size": {
+        "0": 140,
+        "1": 50
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": 209,
+          "label": "放大模型",
+          "slot_index": 0
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 247,
+          "label": "图像"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            222
+          ],
+          "shape": 3,
+          "label": "图像",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageUpscaleWithModel"
+      }
+    },
+    {
+      "id": 136,
+      "type": "ImageScaleBy",
+      "pos": [
+        320,
+        490
+      ],
+      "size": {
+        "0": 240,
+        "1": 82
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 222,
+          "label": "图像"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            223
+          ],
+          "shape": 3,
+          "label": "图像",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageScaleBy"
+      },
+      "widgets_values": [
+        "nearest-exact",
+        0.5
+      ]
+    },
+    {
+      "id": 144,
+      "type": "Note",
+      "pos": [
+        -270,
+        40
+      ],
+      "size": {
+        "0": 260,
+        "1": 150
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "properties": {
+        "text": ""
+      },
+      "widgets_values": [
+        "1、请根据需求自行修改模型、VAE和采样器\n2、其他参数请在理解工作流原理的基础上再做修改\n3、第二个K采样器（效率）中的降噪为重绘幅度，数值越小高清修复后图片越像，建议数值“0.5-1”\n4、本工作流用于LCM加速跑图，步数建议设置在2-8步，CFG建议在1-2之间即可。"
+      ],
+      "color": "#233",
+      "bgcolor": "#355",
+      "shape": 1
+    },
+    {
+      "id": 145,
+      "type": "SDXLPromptStyler",
+      "pos": [
+        380,
+        30
+      ],
+      "size": {
+        "0": 210,
+        "1": 420
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "text_positive",
+          "type": "STRING",
+          "links": [
+            240
+          ],
+          "shape": 3,
+          "label": "正面提示词",
+          "slot_index": 0
+        },
+        {
+          "name": "text_negative",
+          "type": "STRING",
+          "links": [
+            241
+          ],
+          "shape": 3,
+          "label": "负面提示词",
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SDXLPromptStyler"
+      },
+      "widgets_values": [
+        "best quality,masterpiece, HDR,UHD,8K\n",
+        "nsfw,FastNegativeV2,blood,(bad-artist:1),(worst quality, low quality:1.4),(bad_prompt_version2:0.8),bad-hands-5,lowres,bad anatomy,bad hands,((text)),(watermark),error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,((username)),blurry,(extra limbs),bad-artist-anime,badhandv4,EasyNegative,ng_deepnegative_v1_75t, verybadimagenegative_v1.3_2,BadDream,(three hands:1.6),(three legs:1.1),(more than two hands:1.4),(more than two legs,:1.2),unaestheticXLv31,embedding:EasyNegative, embedding:FastNegativeV2, embedding:NegfeetV2, embedding:bad_prompt_version2-neg, embedding:badhandv4, embedding:verybadimagenegative_v1.3, ",
+        "base",
+        "No"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 146,
+      "type": "Efficient Loader",
+      "pos": [
+        0,
+        30
+      ],
+      "size": {
+        "0": 370,
+        "1": 420
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "lora_stack",
+          "type": "LORA_STACK",
+          "link": null,
+          "label": "LoRA堆"
+        },
+        {
+          "name": "cnet_stack",
+          "type": "CONTROL_NET_STACK",
+          "link": null,
+          "label": "ControlNet堆"
+        },
+        {
+          "name": "positive",
+          "type": "STRING",
+          "link": 240,
+          "widget": {
+            "name": "positive"
+          },
+          "label": "正面提示词"
+        },
+        {
+          "name": "negative",
+          "type": "STRING",
+          "link": 241,
+          "widget": {
+            "name": "negative"
+          },
+          "label": "负面提示词"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            242
+          ],
+          "shape": 3,
+          "label": "模型",
+          "slot_index": 0
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": [
+            243
+          ],
+          "shape": 3,
+          "label": "正面条件",
+          "slot_index": 1
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": [
+            244
+          ],
+          "shape": 3,
+          "label": "负面条件",
+          "slot_index": 2
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            245
+          ],
+          "shape": 3,
+          "label": "Latent",
+          "slot_index": 3
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            246,
+            253
+          ],
+          "shape": 3,
+          "label": "VAE",
+          "slot_index": 4
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": null,
+          "shape": 3,
+          "label": "CLIP"
+        },
+        {
+          "name": "DEPENDENCIES",
+          "type": "DEPENDENCIES",
+          "links": null,
+          "shape": 3,
+          "label": "依赖"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Efficient Loader"
+      },
+      "widgets_values": [
+        "SD1.5\\AWPainting_v1.2.safetensors",
+        "vae-ft-mse-840000-ema-pruned.safetensors",
+        -1,
+        "LCM加速\\lcm-lora-sdv1-5.safetensors",
+        1,
+        1,
+        "CLIP_POSITIVE",
+        "CLIP_NEGATIVE",
+        "none",
+        "comfy",
+        512,
+        768,
+        6
+      ]
+    },
+    {
+      "id": 148,
+      "type": "KSampler (Efficient)",
+      "pos": [
+        820,
+        30
+      ],
+      "size": {
+        "0": 210,
+        "1": 562
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 249,
+          "label": "模型"
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 250,
+          "label": "正面提示词"
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 251,
+          "label": "负面提示词"
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 248,
+          "label": "Latent"
+        },
+        {
+          "name": "optional_vae",
+          "type": "VAE",
+          "link": 252,
+          "label": "VAE"
+        },
+        {
+          "name": "script",
+          "type": "SCRIPT",
+          "link": null,
+          "label": "脚本"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": null,
+          "shape": 3,
+          "label": "模型"
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": null,
+          "shape": 3,
+          "label": "正面条件"
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": null,
+          "shape": 3,
+          "label": "负面条件"
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": null,
+          "shape": 3,
+          "label": "Latent"
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null,
+          "shape": 3,
+          "label": "VAE"
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 3,
+          "label": "图像"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler (Efficient)"
+      },
+      "widgets_values": [
+        880437754563707,
+        null,
+        5,
+        1.5,
+        "lcm",
+        "sgm_uniform",
+        0.5,
+        "auto",
+        "true"
+      ]
+    },
+    {
+      "id": 147,
+      "type": "KSampler (Efficient)",
+      "pos": [
+        600,
+        29
+      ],
+      "size": {
+        "0": 210,
+        "1": 562
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 242,
+          "label": "模型"
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 243,
+          "label": "正面提示词"
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 244,
+          "label": "负面提示词"
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 245,
+          "label": "Latent"
+        },
+        {
+          "name": "optional_vae",
+          "type": "VAE",
+          "link": 246,
+          "label": "VAE"
+        },
+        {
+          "name": "script",
+          "type": "SCRIPT",
+          "link": null,
+          "label": "脚本"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            249
+          ],
+          "shape": 3,
+          "label": "模型",
+          "slot_index": 0
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": [
+            250
+          ],
+          "shape": 3,
+          "label": "正面条件",
+          "slot_index": 1
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": [
+            251
+          ],
+          "shape": 3,
+          "label": "负面条件",
+          "slot_index": 2
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": null,
+          "shape": 3,
+          "label": "Latent"
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            252
+          ],
+          "shape": 3,
+          "label": "VAE",
+          "slot_index": 4
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            247
+          ],
+          "shape": 3,
+          "label": "图像",
+          "slot_index": 5
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler (Efficient)"
+      },
+      "widgets_values": [
+        70123845534322,
+        null,
+        5,
+        1.5,
+        "lcm",
+        "sgm_uniform",
+        1,
+        "auto",
+        "true"
+      ]
+    }
+  ],
+  "links": [
+    [
+      209,
+      130,
+      0,
+      129,
+      0,
+      "UPSCALE_MODEL"
+    ],
+    [
+      222,
+      129,
+      0,
+      136,
+      0,
+      "IMAGE"
+    ],
+    [
+      223,
+      136,
+      0,
+      131,
+      0,
+      "IMAGE"
+    ],
+    [
+      240,
+      145,
+      0,
+      146,
+      2,
+      "STRING"
+    ],
+    [
+      241,
+      145,
+      1,
+      146,
+      3,
+      "STRING"
+    ],
+    [
+      242,
+      146,
+      0,
+      147,
+      0,
+      "MODEL"
+    ],
+    [
+      243,
+      146,
+      1,
+      147,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      244,
+      146,
+      2,
+      147,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      245,
+      146,
+      3,
+      147,
+      3,
+      "LATENT"
+    ],
+    [
+      246,
+      146,
+      4,
+      147,
+      4,
+      "VAE"
+    ],
+    [
+      247,
+      147,
+      5,
+      129,
+      1,
+      "IMAGE"
+    ],
+    [
+      248,
+      131,
+      0,
+      148,
+      3,
+      "LATENT"
+    ],
+    [
+      249,
+      147,
+      0,
+      148,
+      0,
+      "MODEL"
+    ],
+    [
+      250,
+      147,
+      1,
+      148,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      251,
+      147,
+      2,
+      148,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      252,
+      147,
+      4,
+      148,
+      4,
+      "VAE"
+    ],
+    [
+      253,
+      146,
+      4,
+      131,
+      1,
+      "VAE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

@@ -1,0 +1,971 @@
+{
+  "last_node_id": 87,
+  "last_link_id": 141,
+  "nodes": [
+    {
+      "id": 42,
+      "type": "ToBasicPipe",
+      "pos": [
+        1720,
+        -144
+      ],
+      "size": [
+        341.8182678222656,
+        122.94080352783203
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 59,
+          "slot_index": 0,
+          "label": "模型"
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 60,
+          "slot_index": 1,
+          "label": "CLIP"
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 96,
+          "slot_index": 2,
+          "label": "VAE"
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 62,
+          "slot_index": 3,
+          "label": "正面条件"
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 63,
+          "slot_index": 4,
+          "label": "负面条件"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "links": [
+            139
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "基础节点束"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ToBasicPipe"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 86,
+      "type": "ADE_AnimateDiffUniformContextOptions",
+      "pos": [
+        1372,
+        79
+      ],
+      "size": [
+        315,
+        270
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prev_context",
+          "type": "CONTEXT_OPTIONS",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "view_opts",
+          "type": "VIEW_OPTS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONTEXT_OPTS",
+          "type": "CONTEXT_OPTIONS",
+          "links": [
+            140
+          ],
+          "shape": 3,
+          "label": "上下文设置"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ADE_AnimateDiffUniformContextOptions"
+      },
+      "widgets_values": [
+        16,
+        1,
+        4,
+        "uniform",
+        false,
+        "flat",
+        false,
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "id": 6,
+      "type": "CLIPTextEncode",
+      "pos": [
+        1378,
+        545
+      ],
+      "size": [
+        299.85400390625,
+        76
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 3,
+          "label": "CLIP"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            63
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "条件"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "(worst quality, low quality: 1.4),((Hands, fingers, arms, palms)),"
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 4,
+      "type": "CLIPSetLastLayer",
+      "pos": [
+        1378,
+        661
+      ],
+      "size": [
+        297.33392333984375,
+        58
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 44,
+          "label": "CLIP"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            3,
+            141
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "CLIP"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPSetLastLayer"
+      },
+      "widgets_values": [
+        -2
+      ]
+    },
+    {
+      "id": 2,
+      "type": "VAELoader",
+      "pos": [
+        1381,
+        759
+      ],
+      "size": [
+        293.6139221191406,
+        63.51900863647461
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            96
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "VAE"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "vae-ft-mse-840000-ema-pruned.safetensors"
+      ]
+    },
+    {
+      "id": 78,
+      "type": "ChangeImageBatchSize //Inspire",
+      "pos": [
+        1725,
+        20
+      ],
+      "size": [
+        335.0804443359375,
+        88.10530090332031
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 128,
+          "label": "图像"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            129,
+            130
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "图像"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ChangeImageBatchSize //Inspire"
+      },
+      "widgets_values": [
+        32,
+        "simple"
+      ]
+    },
+    {
+      "id": 63,
+      "type": "MaskToSEGS",
+      "pos": [
+        1379,
+        862
+      ],
+      "size": [
+        288.85394287109375,
+        154
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 127,
+          "label": "遮罩"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SEGS",
+          "type": "SEGS",
+          "links": [
+            115
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "Seg"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskToSEGS"
+      },
+      "widgets_values": [
+        true,
+        1.5,
+        true,
+        10,
+        false
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 41,
+      "type": "SEGSDetailerForAnimateDiff",
+      "pos": [
+        1725,
+        154
+      ],
+      "size": [
+        322.203857421875,
+        570
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_frames",
+          "type": "IMAGE",
+          "link": 129,
+          "slot_index": 0,
+          "label": "图像"
+        },
+        {
+          "name": "segs",
+          "type": "SEGS",
+          "link": 115,
+          "label": "Seg"
+        },
+        {
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "link": 139,
+          "slot_index": 2,
+          "label": "基础节点束"
+        },
+        {
+          "name": "refiner_basic_pipe_opt",
+          "type": "BASIC_PIPE",
+          "link": null,
+          "label": "优化基础节点束",
+          "shape": 7
+        },
+        {
+          "name": "scheduler_func_opt",
+          "type": "SCHEDULER_FUNC",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "segs",
+          "type": "SEGS",
+          "links": [
+            72
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "Seg"
+        },
+        {
+          "name": "cnet_images",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 6
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SEGSDetailerForAnimateDiff"
+      },
+      "widgets_values": [
+        256,
+        true,
+        512,
+        615841318308138,
+        "fixed",
+        20,
+        8,
+        "euler",
+        "ddim_uniform",
+        0.8,
+        0.5,
+        20
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 49,
+      "type": "SEGSPaste",
+      "pos": [
+        1720,
+        756
+      ],
+      "size": [
+        327.0879211425781,
+        130.13990783691406
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 130,
+          "label": "图像"
+        },
+        {
+          "name": "segs",
+          "type": "SEGS",
+          "link": 72,
+          "label": "Seg"
+        },
+        {
+          "name": "ref_image_opt",
+          "type": "IMAGE",
+          "link": null,
+          "label": "参考图像",
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            131
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "图像"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SEGSPaste"
+      },
+      "widgets_values": [
+        50,
+        255
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 3,
+      "type": "CLIPTextEncode",
+      "pos": [
+        1376,
+        272
+      ],
+      "size": [
+        306.2039794921875,
+        90.5541763305664
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 141,
+          "label": "CLIP"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            62
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "条件"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "1girl,sea,bird,Maple leaves, cherry blossoms, butterflies, masterpiece, best quality,"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 32,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        1378,
+        404
+      ],
+      "size": [
+        297.4352722167969,
+        101.62617492675781
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            43
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "模型"
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            44,
+            60
+          ],
+          "slot_index": 1,
+          "shape": 3,
+          "label": "CLIP"
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [],
+          "shape": 3,
+          "label": "VAE"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "SD1.5\\majicMIX realistic 麦橘写实_v7.safetensors"
+      ]
+    },
+    {
+      "id": 51,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        2739,
+        -136
+      ],
+      "size": [
+        770.3291015625,
+        286
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 131,
+          "label": "图像",
+          "shape": 7
+        },
+        {
+          "name": "audio",
+          "type": "VHS_AUDIO",
+          "link": null,
+          "shape": 7,
+          "label": "音频"
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null,
+          "shape": 7,
+          "label": "批次管理"
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "label": "文件名"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 8,
+        "loop_count": 0,
+        "filename_prefix": "mask/m",
+        "format": "video/webm",
+        "crf": 20,
+        "save_metadata": true,
+        "pingpong": true,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "m_00014.webm",
+            "subfolder": "mask",
+            "type": "output",
+            "format": "video/webm"
+          }
+        }
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 76,
+      "type": "LoadImage",
+      "pos": [
+        2074,
+        -145
+      ],
+      "size": [
+        650.3131713867188,
+        1018.1016235351562
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            128
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "图像"
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            127
+          ],
+          "slot_index": 1,
+          "shape": 3,
+          "label": "遮罩"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "clipspace/clipspace-mask-5743999.3999999985.png [input]",
+        "image"
+      ]
+    },
+    {
+      "id": 27,
+      "type": "ADE_AnimateDiffLoaderWithContext",
+      "pos": [
+        1376,
+        -147
+      ],
+      "size": [
+        315,
+        230
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 43,
+          "label": "模型"
+        },
+        {
+          "name": "context_options",
+          "type": "CONTEXT_OPTIONS",
+          "link": 140,
+          "slot_index": 1,
+          "label": "上下文设置",
+          "shape": 7
+        },
+        {
+          "name": "motion_lora",
+          "type": "MOTION_LORA",
+          "link": null,
+          "label": "动态LoRA",
+          "shape": 7
+        },
+        {
+          "name": "ad_settings",
+          "type": "AD_SETTINGS",
+          "link": null,
+          "label": "AD设置",
+          "shape": 7
+        },
+        {
+          "name": "sample_settings",
+          "type": "SAMPLE_SETTINGS",
+          "link": null,
+          "shape": 7,
+          "label": "采样设置"
+        },
+        {
+          "name": "ad_keyframes",
+          "type": "AD_KEYFRAMES",
+          "link": null,
+          "shape": 7,
+          "label": "AD关键帧"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            59
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "模型"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ADE_AnimateDiffLoaderWithContext"
+      },
+      "widgets_values": [
+        "mm-Stabilized_mid.pth",
+        "sqrt_linear (AnimateDiff)",
+        1,
+        false
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      3,
+      4,
+      0,
+      6,
+      0,
+      "CLIP"
+    ],
+    [
+      43,
+      32,
+      0,
+      27,
+      0,
+      "MODEL"
+    ],
+    [
+      44,
+      32,
+      1,
+      4,
+      0,
+      "CLIP"
+    ],
+    [
+      59,
+      27,
+      0,
+      42,
+      0,
+      "MODEL"
+    ],
+    [
+      60,
+      32,
+      1,
+      42,
+      1,
+      "CLIP"
+    ],
+    [
+      62,
+      3,
+      0,
+      42,
+      3,
+      "CONDITIONING"
+    ],
+    [
+      63,
+      6,
+      0,
+      42,
+      4,
+      "CONDITIONING"
+    ],
+    [
+      72,
+      41,
+      0,
+      49,
+      1,
+      "SEGS"
+    ],
+    [
+      96,
+      2,
+      0,
+      42,
+      2,
+      "VAE"
+    ],
+    [
+      115,
+      63,
+      0,
+      41,
+      1,
+      "SEGS"
+    ],
+    [
+      127,
+      76,
+      1,
+      63,
+      0,
+      "MASK"
+    ],
+    [
+      128,
+      76,
+      0,
+      78,
+      0,
+      "IMAGE"
+    ],
+    [
+      129,
+      78,
+      0,
+      41,
+      0,
+      "IMAGE"
+    ],
+    [
+      130,
+      78,
+      0,
+      49,
+      0,
+      "IMAGE"
+    ],
+    [
+      131,
+      49,
+      0,
+      51,
+      0,
+      "IMAGE"
+    ],
+    [
+      139,
+      42,
+      0,
+      41,
+      2,
+      "BASIC_PIPE"
+    ],
+    [
+      140,
+      86,
+      0,
+      27,
+      1,
+      "CONTEXT_OPTIONS"
+    ],
+    [
+      141,
+      4,
+      0,
+      3,
+      0,
+      "CLIP"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 2,
+      "title": "绘制变动图视频工作流",
+      "bounding": [
+        1366,
+        -221,
+        2172,
+        1262
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 1,
+      "title": "Group",
+      "bounding": [
+        2199,
+        -148,
+        140,
+        80
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.49500000000000016,
+      "offset": [
+        -276.9152190575936,
+        576.0270473328326
+      ]
+    },
+    "ue_links": []
+  },
+  "version": 0.4
+}

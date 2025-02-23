@@ -1,0 +1,1599 @@
+{
+  "last_node_id": 60,
+  "last_link_id": 133,
+  "nodes": [
+    {
+      "id": 43,
+      "type": "SUPIR_decode",
+      "pos": [
+        981,
+        786
+      ],
+      "size": [
+        213.84556579589844,
+        129.1064910888672
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "SUPIR_VAE",
+          "type": "SUPIRVAE",
+          "link": 90,
+          "slot_index": 0,
+          "label": "SUPIR_VAE"
+        },
+        {
+          "name": "latents",
+          "type": "LATENT",
+          "link": 91,
+          "label": "Latent"
+        },
+        {
+          "name": "decoder_tile_size",
+          "type": "INT",
+          "link": 92,
+          "widget": {
+            "name": "decoder_tile_size"
+          },
+          "label": "解码分块尺寸"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            97
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "图像"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SUPIR_decode"
+      },
+      "widgets_values": [
+        true,
+        512
+      ]
+    },
+    {
+      "id": 50,
+      "type": "ImpactInt",
+      "pos": [
+        474,
+        1119
+      ],
+      "size": [
+        210,
+        58
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            87
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "整数"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImpactInt"
+      },
+      "widgets_values": [
+        512
+      ]
+    },
+    {
+      "id": 49,
+      "type": "ImpactInt",
+      "pos": [
+        234,
+        1118
+      ],
+      "size": [
+        221.49961853027344,
+        58
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            79,
+            80,
+            86,
+            92,
+            95
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "整数"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImpactInt"
+      },
+      "widgets_values": [
+        1024
+      ]
+    },
+    {
+      "id": 45,
+      "type": "ColorMatch",
+      "pos": [
+        985,
+        968
+      ],
+      "size": [
+        212.60520935058594,
+        125.10394287109375
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_ref",
+          "type": "IMAGE",
+          "link": 96,
+          "slot_index": 0,
+          "label": "参考图像"
+        },
+        {
+          "name": "image_target",
+          "type": "IMAGE",
+          "link": 97,
+          "label": "目标图像"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            110,
+            128
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "图像"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ColorMatch"
+      },
+      "widgets_values": [
+        "mkl",
+        1
+      ]
+    },
+    {
+      "id": 42,
+      "type": "SUPIR_conditioner",
+      "pos": [
+        472,
+        780
+      ],
+      "size": [
+        210,
+        306.2048034667969
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "SUPIR_model",
+          "type": "SUPIRMODEL",
+          "link": 88,
+          "slot_index": 0
+        },
+        {
+          "name": "latents",
+          "type": "LATENT",
+          "link": 89,
+          "slot_index": 1,
+          "label": "Latent"
+        },
+        {
+          "name": "captions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "captions"
+          },
+          "label": "captions"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "SUPIR_cond_pos",
+          "links": [
+            83
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "正面条件"
+        },
+        {
+          "name": "negative",
+          "type": "SUPIR_cond_neg",
+          "links": [
+            84
+          ],
+          "slot_index": 1,
+          "shape": 3,
+          "label": "负面条件"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SUPIR_conditioner"
+      },
+      "widgets_values": [
+        "high quality, detailed, photograph",
+        "bad quality, blurry, messy",
+        "",
+        true,
+        true
+      ]
+    },
+    {
+      "id": 48,
+      "type": "Seed (rgthree)",
+      "pos": [
+        983,
+        580
+      ],
+      "size": [
+        211.84556579589844,
+        151.58975219726562
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "SEED",
+          "type": "INT",
+          "links": [
+            85,
+            115
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "dir": 4,
+          "label": "随机种"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Seed (rgthree)"
+      },
+      "widgets_values": [
+        -1,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": 57,
+      "type": "CLIPTextEncode",
+      "pos": [
+        1239,
+        859
+      ],
+      "size": [
+        326.0656433105469,
+        130.68148803710938
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 122,
+          "label": "CLIP"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            130
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "条件"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "high quality, detailed, photograph",
+        true
+      ]
+    },
+    {
+      "id": 58,
+      "type": "CLIPTextEncode",
+      "pos": [
+        1242,
+        1034
+      ],
+      "size": [
+        315.26739501953125,
+        131.69029235839844
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 123,
+          "label": "CLIP"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            131
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "条件"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "bad quality, blurry, messy",
+        true
+      ]
+    },
+    {
+      "id": 55,
+      "type": "UltimateSDUpscale",
+      "pos": [
+        1568,
+        571
+      ],
+      "size": [
+        323.505859375,
+        596.1324462890625
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 128,
+          "label": "图像"
+        },
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 129,
+          "label": "模型"
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 130,
+          "slot_index": 2,
+          "label": "正面条件"
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 131,
+          "label": "负面条件"
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 132,
+          "label": "VAE"
+        },
+        {
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": 133,
+          "slot_index": 5,
+          "label": "放大模型"
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 115,
+          "widget": {
+            "name": "seed"
+          },
+          "label": "随机种"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            112
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "图像"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UltimateSDUpscale"
+      },
+      "widgets_values": [
+        4,
+        819887529746422,
+        "randomize",
+        25,
+        7,
+        "dpmpp_2m",
+        "karras",
+        0.2,
+        "None",
+        1024,
+        1024,
+        8,
+        32,
+        "None",
+        1,
+        64,
+        8,
+        16,
+        "enable",
+        false
+      ]
+    },
+    {
+      "id": 51,
+      "type": "ImageResizeKJ",
+      "pos": [
+        232,
+        777
+      ],
+      "size": [
+        224.63909912109375,
+        300.9258728027344
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 101,
+          "label": "图像"
+        },
+        {
+          "name": "get_image_size",
+          "type": "IMAGE",
+          "link": null,
+          "label": "参考图像",
+          "shape": 7
+        },
+        {
+          "name": "width_input",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "width_input"
+          },
+          "label": "宽度"
+        },
+        {
+          "name": "height_input",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "height_input"
+          },
+          "label": "高度"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            78
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "图像"
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "links": null,
+          "shape": 3,
+          "label": "宽度"
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": null,
+          "shape": 3,
+          "label": "高度"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageResizeKJ"
+      },
+      "widgets_values": [
+        2048,
+        2048,
+        "nearest-exact",
+        true,
+        2,
+        0,
+        0,
+        "disabled"
+      ]
+    },
+    {
+      "id": 52,
+      "type": "Image Comparer (rgthree)",
+      "pos": [
+        -53,
+        1293
+      ],
+      "size": [
+        679.541748046875,
+        626.6851806640625
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_a",
+          "type": "IMAGE",
+          "link": 110,
+          "label": "图像_A",
+          "dir": 3
+        },
+        {
+          "name": "image_b",
+          "type": "IMAGE",
+          "link": 111,
+          "label": "图像_B",
+          "dir": 3
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "comparer_mode": "Slide"
+      },
+      "widgets_values": [
+        [
+          {
+            "name": "A",
+            "selected": true,
+            "url": "/api/view?filename=rgthree.compare._temp_eclym_00001_.png&type=temp&subfolder=&rand=0.9544231426518583"
+          },
+          {
+            "name": "B",
+            "selected": true,
+            "url": "/api/view?filename=rgthree.compare._temp_eclym_00002_.png&type=temp&subfolder=&rand=0.9268556598489781"
+          }
+        ]
+      ]
+    },
+    {
+      "id": 41,
+      "type": "SUPIR_sample",
+      "pos": [
+        696,
+        773
+      ],
+      "size": [
+        271.5998229980469,
+        418
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "SUPIR_model",
+          "type": "SUPIRMODEL",
+          "link": 81,
+          "slot_index": 0,
+          "label": "SUPIR模型"
+        },
+        {
+          "name": "latents",
+          "type": "LATENT",
+          "link": 82,
+          "label": "Latent"
+        },
+        {
+          "name": "positive",
+          "type": "SUPIR_cond_pos",
+          "link": 83,
+          "slot_index": 2,
+          "label": "正面条件"
+        },
+        {
+          "name": "negative",
+          "type": "SUPIR_cond_neg",
+          "link": 84,
+          "label": "负面条件"
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 85,
+          "slot_index": 4,
+          "widget": {
+            "name": "seed"
+          },
+          "label": "随机种"
+        },
+        {
+          "name": "sampler_tile_size",
+          "type": "INT",
+          "link": 86,
+          "widget": {
+            "name": "sampler_tile_size"
+          },
+          "label": "采样器分块尺寸"
+        },
+        {
+          "name": "sampler_tile_stride",
+          "type": "INT",
+          "link": 87,
+          "widget": {
+            "name": "sampler_tile_stride"
+          },
+          "label": "采样器分块步长"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": [
+            91
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "Latent"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SUPIR_sample"
+      },
+      "widgets_values": [
+        174277455657960,
+        "fixed",
+        12,
+        2,
+        1.5,
+        5,
+        1.0010000000000001,
+        1,
+        1,
+        0.9,
+        1,
+        false,
+        "RestoreDPMPP2MSampler",
+        512,
+        256
+      ]
+    },
+    {
+      "id": 40,
+      "type": "SUPIR_first_stage",
+      "pos": [
+        450,
+        572
+      ],
+      "size": [
+        236.67604064941406,
+        163.10203552246094
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "SUPIR_VAE",
+          "type": "SUPIRVAE",
+          "link": 77,
+          "slot_index": 0,
+          "label": "SUPIR_VAE"
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 78,
+          "label": "图像"
+        },
+        {
+          "name": "encoder_tile_size",
+          "type": "INT",
+          "link": 79,
+          "widget": {
+            "name": "encoder_tile_size"
+          },
+          "label": "编码分块尺寸"
+        },
+        {
+          "name": "decoder_tile_size",
+          "type": "INT",
+          "link": 80,
+          "widget": {
+            "name": "decoder_tile_size"
+          },
+          "label": "解码分块尺寸"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SUPIR_VAE",
+          "type": "SUPIRVAE",
+          "links": [
+            93
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "SUPIR_VAE"
+        },
+        {
+          "name": "denoised_image",
+          "type": "IMAGE",
+          "links": [
+            94
+          ],
+          "slot_index": 1,
+          "shape": 3,
+          "label": "图像"
+        },
+        {
+          "name": "denoised_latents",
+          "type": "LATENT",
+          "links": [
+            89
+          ],
+          "slot_index": 2,
+          "shape": 3,
+          "label": "Latent"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SUPIR_first_stage"
+      },
+      "widgets_values": [
+        true,
+        512,
+        512,
+        "auto"
+      ]
+    },
+    {
+      "id": 59,
+      "type": "Image Comparer (rgthree)",
+      "pos": [
+        1028,
+        1292
+      ],
+      "size": [
+        741.2084350585938,
+        629.4629516601562
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_a",
+          "type": "IMAGE",
+          "link": 112,
+          "label": "图像_A",
+          "dir": 3
+        },
+        {
+          "name": "image_b",
+          "type": "IMAGE",
+          "link": 113,
+          "label": "图像_B",
+          "dir": 3
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "comparer_mode": "Slide"
+      },
+      "widgets_values": [
+        [
+          {
+            "name": "A",
+            "selected": true,
+            "url": "/api/view?filename=rgthree.compare._temp_ljzac_00001_.png&type=temp&subfolder=&rand=0.741101937680791"
+          },
+          {
+            "name": "B",
+            "selected": true,
+            "url": "/api/view?filename=rgthree.compare._temp_ljzac_00002_.png&type=temp&subfolder=&rand=0.9612725558316682"
+          }
+        ]
+      ]
+    },
+    {
+      "id": 44,
+      "type": "SUPIR_encode",
+      "pos": [
+        697,
+        573
+      ],
+      "size": [
+        263.14984130859375,
+        158.3388671875
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "SUPIR_VAE",
+          "type": "SUPIRVAE",
+          "link": 93,
+          "label": "SUPIR_VAE"
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 94,
+          "label": "图像"
+        },
+        {
+          "name": "encoder_tile_size",
+          "type": "INT",
+          "link": 95,
+          "widget": {
+            "name": "encoder_tile_size"
+          },
+          "label": "编码分块尺寸"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": [
+            82
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "Latent"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SUPIR_encode"
+      },
+      "widgets_values": [
+        true,
+        512,
+        "auto"
+      ]
+    },
+    {
+      "id": 39,
+      "type": "LoadImage",
+      "pos": [
+        -177,
+        785
+      ],
+      "size": [
+        393.0514221191406,
+        380.3810119628906
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            96,
+            101,
+            111,
+            113
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "图像"
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3,
+          "label": "遮罩"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "istockphoto-1764142443-2048x2048.jpg",
+        "image"
+      ]
+    },
+    {
+      "id": 47,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -175,
+        578
+      ],
+      "size": [
+        290.71820068359375,
+        109.25762176513672
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            98,
+            119
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "模型"
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            99,
+            120
+          ],
+          "slot_index": 1,
+          "shape": 3,
+          "label": "CLIP"
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            100,
+            132
+          ],
+          "slot_index": 2,
+          "shape": 3,
+          "label": "VAE"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "juggernautXL_v9-Lightning_4S_V9 + RDPhoto 2.safetensors"
+      ]
+    },
+    {
+      "id": 60,
+      "type": "Load Lora",
+      "pos": [
+        1240,
+        667
+      ],
+      "size": [
+        315,
+        146
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 119,
+          "label": "模型"
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 120,
+          "label": "CLIP"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            129
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "模型"
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            122,
+            123
+          ],
+          "slot_index": 1,
+          "shape": 3,
+          "label": "CLIP"
+        },
+        {
+          "name": "NAME_STRING",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "label": "名称字符串"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Load Lora"
+      },
+      "widgets_values": [
+        "SDXL Detail 细节调节器_v1.0.safetensors",
+        1,
+        1
+      ]
+    },
+    {
+      "id": 56,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        1235,
+        569
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [
+            133
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "放大模型"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UpscaleModelLoader"
+      },
+      "widgets_values": [
+        "4x-UltraSharp.pth"
+      ]
+    },
+    {
+      "id": 46,
+      "type": "SUPIR_model_loader_v2",
+      "pos": [
+        130,
+        570
+      ],
+      "size": [
+        298.2899475097656,
+        170
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 98,
+          "slot_index": 0,
+          "label": "模型"
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 99,
+          "label": "CLIP"
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 100,
+          "label": "VAE"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SUPIR_model",
+          "type": "SUPIRMODEL",
+          "links": [
+            81,
+            88
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "SUPIR模型"
+        },
+        {
+          "name": "SUPIR_VAE",
+          "type": "SUPIRVAE",
+          "links": [
+            77,
+            90
+          ],
+          "slot_index": 1,
+          "shape": 3,
+          "label": "SUPIR_VAE"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SUPIR_model_loader_v2"
+      },
+      "widgets_values": [
+        "SUPIR/SUPIR-v0Q.ckpt",
+        true,
+        "fp16",
+        false
+      ]
+    }
+  ],
+  "links": [
+    [
+      77,
+      46,
+      1,
+      40,
+      0,
+      "SUPIRVAE"
+    ],
+    [
+      78,
+      51,
+      0,
+      40,
+      1,
+      "IMAGE"
+    ],
+    [
+      79,
+      49,
+      0,
+      40,
+      2,
+      "INT"
+    ],
+    [
+      80,
+      49,
+      0,
+      40,
+      3,
+      "INT"
+    ],
+    [
+      81,
+      46,
+      0,
+      41,
+      0,
+      "SUPIRMODEL"
+    ],
+    [
+      82,
+      44,
+      0,
+      41,
+      1,
+      "LATENT"
+    ],
+    [
+      83,
+      42,
+      0,
+      41,
+      2,
+      "SUPIR_cond_pos"
+    ],
+    [
+      84,
+      42,
+      1,
+      41,
+      3,
+      "SUPIR_cond_neg"
+    ],
+    [
+      85,
+      48,
+      0,
+      41,
+      4,
+      "INT"
+    ],
+    [
+      86,
+      49,
+      0,
+      41,
+      5,
+      "INT"
+    ],
+    [
+      87,
+      50,
+      0,
+      41,
+      6,
+      "INT"
+    ],
+    [
+      88,
+      46,
+      0,
+      42,
+      0,
+      "SUPIRMODEL"
+    ],
+    [
+      89,
+      40,
+      2,
+      42,
+      1,
+      "LATENT"
+    ],
+    [
+      90,
+      46,
+      1,
+      43,
+      0,
+      "SUPIRVAE"
+    ],
+    [
+      91,
+      41,
+      0,
+      43,
+      1,
+      "LATENT"
+    ],
+    [
+      92,
+      49,
+      0,
+      43,
+      2,
+      "INT"
+    ],
+    [
+      93,
+      40,
+      0,
+      44,
+      0,
+      "SUPIRVAE"
+    ],
+    [
+      94,
+      40,
+      1,
+      44,
+      1,
+      "IMAGE"
+    ],
+    [
+      95,
+      49,
+      0,
+      44,
+      2,
+      "INT"
+    ],
+    [
+      96,
+      39,
+      0,
+      45,
+      0,
+      "IMAGE"
+    ],
+    [
+      97,
+      43,
+      0,
+      45,
+      1,
+      "IMAGE"
+    ],
+    [
+      98,
+      47,
+      0,
+      46,
+      0,
+      "MODEL"
+    ],
+    [
+      99,
+      47,
+      1,
+      46,
+      1,
+      "CLIP"
+    ],
+    [
+      100,
+      47,
+      2,
+      46,
+      2,
+      "VAE"
+    ],
+    [
+      101,
+      39,
+      0,
+      51,
+      0,
+      "IMAGE"
+    ],
+    [
+      110,
+      45,
+      0,
+      52,
+      0,
+      "IMAGE"
+    ],
+    [
+      111,
+      39,
+      0,
+      52,
+      1,
+      "IMAGE"
+    ],
+    [
+      112,
+      55,
+      0,
+      59,
+      0,
+      "IMAGE"
+    ],
+    [
+      113,
+      39,
+      0,
+      59,
+      1,
+      "IMAGE"
+    ],
+    [
+      115,
+      48,
+      0,
+      55,
+      6,
+      "INT"
+    ],
+    [
+      119,
+      47,
+      0,
+      60,
+      0,
+      "MODEL"
+    ],
+    [
+      120,
+      47,
+      1,
+      60,
+      1,
+      "CLIP"
+    ],
+    [
+      122,
+      60,
+      1,
+      57,
+      0,
+      "CLIP"
+    ],
+    [
+      123,
+      60,
+      1,
+      58,
+      0,
+      "CLIP"
+    ],
+    [
+      128,
+      45,
+      0,
+      55,
+      0,
+      "IMAGE"
+    ],
+    [
+      129,
+      60,
+      0,
+      55,
+      1,
+      "MODEL"
+    ],
+    [
+      130,
+      57,
+      0,
+      55,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      131,
+      58,
+      0,
+      55,
+      3,
+      "CONDITIONING"
+    ],
+    [
+      132,
+      47,
+      2,
+      55,
+      4,
+      "VAE"
+    ],
+    [
+      133,
+      56,
+      0,
+      55,
+      5,
+      "UPSCALE_MODEL"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "8K对比效果",
+      "bounding": [
+        859,
+        1213,
+        1077,
+        725
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "2k对比效果",
+      "bounding": [
+        -198,
+        1214,
+        1048,
+        724
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "Step2: 8K by Upscale",
+      "bounding": [
+        1221,
+        477,
+        711,
+        718
+      ],
+      "color": "#3f789e",
+      "font_size": 36,
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "Step1:2k by supir",
+      "bounding": [
+        -196,
+        476,
+        1411,
+        719
+      ],
+      "color": "#3f789e",
+      "font_size": 36,
+      "flags": {}
+    },
+    {
+      "id": 5,
+      "title": "有问题加V联系：nantianai55",
+      "bounding": [
+        -191.96621704101562,
+        381.6667785644531,
+        666.6792602539062,
+        80
+      ],
+      "color": "#3f789e",
+      "font_size": 50,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.45,
+      "offset": [
+        1054.1883595784504,
+        -39.44444444444452
+      ]
+    },
+    "workspace_info": {
+      "id": "09XOAS9Nd-5W29DzIuV_Q",
+      "saveLock": false,
+      "cloudID": null,
+      "coverMediaPath": null
+    },
+    "ue_links": [],
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0
+  },
+  "version": 0.4
+}
