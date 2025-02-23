@@ -1,6 +1,0 @@
-{
-  "_name_or_path": "PramaLLC/BEN2",
-  "architectures": ["BEN_Base"],
-  "version": "1.0",
-  "torch_dtype": "float32"
-}
