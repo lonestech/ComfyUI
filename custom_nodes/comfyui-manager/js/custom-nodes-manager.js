@@ -4,11 +4,15 @@ import { api } from "../../scripts/api.js";
 
 import {
 	manager_instance, rebootAPI, install_via_git_url,
-	fetchData, md5, icons, show_message, customConfirm, customAlert, customPrompt, sanitizeHTML, infoToast
+	fetchData, md5, icons, show_message, customConfirm, customAlert, customPrompt,
+	sanitizeHTML, infoToast, showTerminal, setNeedRestart,
+	storeColumnWidth, restoreColumnWidth
 } from  "./common.js";
 
 // https://cenfun.github.io/turbogrid/api.html
 import TG from "./turbogrid.esm.js";
+
+const gridId = "node";
 
 const pageCss = `
 .cn-manager {
@@ -359,6 +363,7 @@ const pageHtml = `
 	<button class="cn-manager-restart">Restart</button>
 	<button class="cn-manager-stop">Stop</button>
 	<div class="cn-flex-auto"></div>
+	<button class="cn-manager-used-in-workflow">Used In Workflow</button>
 	<button class="cn-manager-check-update">Check Update</button>
 	<button class="cn-manager-check-missing">Check Missing</button>
 	<button class="cn-manager-install-url">Install via Git URL</button>
@@ -370,7 +375,8 @@ const ShowMode = {
 	UPDATE: "Update",
 	MISSING: "Missing",
 	FAVORITES: "Favorites",
-	ALTERNATIVES: "Alternatives"
+	ALTERNATIVES: "Alternatives",
+	IN_WORKFLOW: "In Workflow",
 };
 
 export class CustomNodesManager {
@@ -400,7 +406,6 @@ export class CustomNodesManager {
 		this.init();
 
         api.addEventListener("cm-queue-status", this.onQueueStatus);
-        api.addEventListener('reconnected', this.onReconnected);
 	}
 
 	init() {
@@ -584,6 +589,10 @@ export class CustomNodesManager {
 			value: ShowMode.UPDATE,
 			hasData: false
 		}, {
+			label: "In Workflow",
+			value: ShowMode.IN_WORKFLOW,
+			hasData: false
+		}, {
 			label: "Missing",
 			value: ShowMode.MISSING,
 			hasData: false
@@ -723,7 +732,7 @@ export class CustomNodesManager {
 					const value = e.target.value
 					this.filter = value;
 					const item = this.getFilterItem(value);
-					if (item && !item.hasData) {
+					if (item && (!item.hasData)) {
 						this.loadData(value);
 						return;
 					}
@@ -773,6 +782,14 @@ export class CustomNodesManager {
 				click: () => {
 					api.fetchApi('/manager/queue/reset');
 					infoToast('Cancel', 'Remaining tasks will stop after completing the current task.');
+				}
+			},
+
+			".cn-manager-used-in-workflow": {
+				click: (e) => {
+					e.target.classList.add("cn-btn-loading");
+					this.setFilter(ShowMode.IN_WORKFLOW);
+					this.loadData(ShowMode.IN_WORKFLOW);
 				}
 			},
 
@@ -830,6 +847,10 @@ export class CustomNodesManager {
 
 		grid.bind('onSelectChanged', (e, changes) => {
 			this.renderSelected();
+		});
+
+		grid.bind("onColumnWidthChanged", (e, columnItem) => {
+			storeColumnWidth(gridId, columnItem)
 		});
 
 		grid.bind('onClick', (e, d) => {
@@ -1159,6 +1180,8 @@ export class CustomNodesManager {
 				return 0;
 			});
 
+		restoreColumnWidth(gridId, columns);
+
 		this.grid.setData({
 			options: options,
 			rows: rows_values,
@@ -1369,14 +1392,14 @@ export class CustomNodesManager {
 			});
 
 			if (res.status != 200) {
-				errorMsg = `${item.title} ${mode} failed: `;
+				errorMsg = `'${item.title}': `;
 
 				if(res.status == 403) {
-					errorMsg += `This action is not allowed with this security level configuration.`;
+					errorMsg += `This action is not allowed with this security level configuration.\n`;
 				} else if(res.status == 404) {
-					errorMsg += `With the current security level configuration, only custom nodes from the <B>"default channel"</B> can be installed.`;
+					errorMsg += `With the current security level configuration, only custom nodes from the <B>"default channel"</B> can be installed.\n`;
 				} else {
-					errorMsg += await res.text();
+					errorMsg += await res.text() + '\n';
 				}
 
 				break;
@@ -1387,32 +1410,18 @@ export class CustomNodesManager {
 
 		if(errorMsg) {
 			this.showError(errorMsg);
-			show_message("Installation Error:\n"+errorMsg);
+			show_message("[Installation Errors]\n"+errorMsg);
 
 			// reset
 			for(let k in target_items) {
-				let item = this.install_context.targets[k];
+				const item = target_items[k];
 				this.grid.updateCell(item, "action");
 			}
 		}
 		else {
 			await api.fetchApi('/manager/queue/start');
 			this.showStop();
-		}
-	}
-
-	async onReconnected(event) {
-		let self = CustomNodesManager.instance;
-
-		if(self.need_restart) {
-			self.need_restart = false;
-
-			const confirmed = await customConfirm("To apply the changes to the node pack's installation status, you need to refresh the browser. Would you like to refresh?");
-			if (!confirmed) {
-				return;
-			}
-
-			window.location.reload(true);
+			showTerminal();
 		}
 	}
 
@@ -1455,7 +1464,7 @@ export class CustomNodesManager {
 		for(let hash in result){
 			let v = result[hash];
 
-			if(v != 'success')
+			if(v != 'success' && v != 'skip')
 				errorMsg += v+'\n';
 		}
 
@@ -1534,7 +1543,110 @@ export class CustomNodesManager {
 		return extension_mappings;
 	}
 
+	getNodesInWorkflow() {
+		let usedGroupNodes = new Set();
+		let allUsedNodes = {};
+
+		for(let k in app.graph._nodes) {
+			let node = app.graph._nodes[k];
+
+			if(node.type.startsWith('workflow>')) {
+				usedGroupNodes.add(node.type.slice(9));
+				continue;
+			}
+
+			allUsedNodes[node.type] = node;
+		}
+
+		for(let k of usedGroupNodes) {
+			let subnodes = app.graph.extra.groupNodes[k]?.nodes;
+
+			if(subnodes) {
+				for(let k2 in subnodes) {
+					let node = subnodes[k2];
+					allUsedNodes[node.type] = node;
+				}
+			}
+		}
+
+		return allUsedNodes;
+	}
+
 	async getMissingNodes() {
+		let unresolved_missing_nodes = new Set();
+		let hashMap = {};
+		let allUsedNodes = this.getNodesInWorkflow();
+		
+		const registered_nodes = new Set();
+		for (let i in LiteGraph.registered_node_types) {
+			registered_nodes.add(LiteGraph.registered_node_types[i].type);
+		}
+
+		let unresolved_aux_ids = {};
+		let outdated_comfyui = false;
+
+		for(let k in allUsedNodes) {
+			let node = allUsedNodes[k];
+
+			if(!registered_nodes.has(node.type)) {
+				// missing node
+				if(node.properties.cnr_id) {
+					if(node.properties.cnr_id == 'comfy-core') {
+						outdated_comfyui = true;
+					}
+
+					let item = this.custom_nodes[node.properties.cnr_id];
+					hashMap[item.hash] = true;
+				}
+				else if(node.properties.aux_id) {
+					unresolved_aux_ids[node.properties.aux_id] = node.type;
+				}
+				else {
+					unresolved_missing_nodes.add(node.type);
+				}
+			}
+		}
+
+		if(outdated_comfyui) {
+			customAlert('ComfyUI is outdated, so some built-in nodes cannot be used.');
+		}
+
+		if(Object.keys(unresolved_aux_ids).length > 0) {
+			// building aux_id to nodepack map
+			let aux_id_to_pack = {};
+			for(let k in this.custom_nodes) {
+				let nodepack = this.custom_nodes[k];
+				let aux_id;
+				if(nodepack.repository?.startsWith('https://github.com')) {
+					aux_id = nodepack.repository.split('/').slice(-2).join('/');
+					aux_id_to_pack[aux_id] = nodepack;
+				}
+				else if(nodepack.repository) {
+					aux_id = nodepack.repository.split('/').slice(-1);
+					aux_id_to_pack[aux_id] = nodepack;
+				}
+			}
+
+			// resolving aux_id
+			for(let k in unresolved_aux_ids) {
+				let nodepack = aux_id_to_pack[k];
+				if(nodepack) {
+					hashMap[nodepack.hash] = true;
+				}
+				else {
+					unresolved_missing_nodes.add(unresolved_aux_ids[k]);
+				}
+			}
+		}
+
+		if(unresolved_missing_nodes.size > 0) {
+			await this.getMissingNodesLegacy(hashMap, unresolved_missing_nodes, registered_nodes);
+		}
+
+		return hashMap;
+	}
+
+	async getMissingNodesLegacy(hashMap, missing_nodes, registered_nodes) {
 		const mode = manager_instance.datasrc_combo.value;
 		this.showStatus(`Loading missing nodes (${mode}) ...`);
 		const res = await fetchData(`/customnode/getmappings?mode=${mode}`);
@@ -1573,23 +1685,8 @@ export class CustomNodesManager {
 			}
 		}
 
-		const registered_nodes = new Set();
-		for (let i in LiteGraph.registered_node_types) {
-			registered_nodes.add(LiteGraph.registered_node_types[i].type);
-		}
-
-		const missing_nodes = new Set();
-		const workflow = app.graph.serialize();
-		const group_nodes = workflow.extra && workflow.extra.groupNodes ? workflow.extra.groupNodes : [];
-		let nodes = workflow.nodes;
-
-		for (let i in group_nodes) {
-			let group_node = group_nodes[i];
-			nodes = nodes.concat(group_node.nodes);
-		}
-
-		for (let i in nodes) {
-			const node_type = nodes[i].type;
+		let unresolved_missing_nodes = new Set();
+		for (let node_type of missing_nodes) {
 			if(node_type.startsWith('workflow/') || node_type.startsWith('workflow>'))
 				continue;
 
@@ -1597,26 +1694,25 @@ export class CustomNodesManager {
 				const packs = name_to_packs[node_type.trim()];
 				if(packs)
 					packs.forEach(url => {
-						missing_nodes.add(url);
+						unresolved_missing_nodes.add(url);
 					});
 				else {
 					for(let j in regex_to_pack) {
 						if(regex_to_pack[j].regex.test(node_type)) {
-							missing_nodes.add(regex_to_pack[j].url);
+							unresolved_missing_nodes.add(regex_to_pack[j].url);
 						}
 					}
 				}
 			}
 		}
 
-		const hashMap = {};
 		for(let k in this.custom_nodes) {
 			let item = this.custom_nodes[k];
 
-			if(missing_nodes.has(item.id)) {
+			if(unresolved_missing_nodes.has(item.id)) {
 				hashMap[item.hash] = true;
 			}
-			else if (item.files?.some(file => missing_nodes.has(file))) {
+			else if (item.files?.some(file => unresolved_missing_nodes.has(file))) {
 				hashMap[item.hash] = true;
 			}
 		}
@@ -1629,6 +1725,41 @@ export class CustomNodesManager {
 		for(let k in this.custom_nodes) {
 			let item = this.custom_nodes[k];
 			if(item.is_favorite)
+			    hashMap[item.hash] = true;
+		}
+
+		return hashMap;
+	}
+
+	async getNodepackInWorkflow() {
+		let allUsedNodes = this.getNodesInWorkflow();
+
+		// building aux_id to nodepack map
+		let aux_id_to_pack = {};
+		for(let k in this.custom_nodes) {
+			let nodepack = this.custom_nodes[k];
+			let aux_id;
+			if(nodepack.repository?.startsWith('https://github.com')) {
+				aux_id = nodepack.repository.split('/').slice(-2).join('/');
+				aux_id_to_pack[aux_id] = nodepack;
+			}
+			else if(nodepack.repository) {
+				aux_id = nodepack.repository.split('/').slice(-1);
+				aux_id_to_pack[aux_id] = nodepack;
+			}
+		}
+
+		const hashMap = {};
+		for(let k in allUsedNodes) {
+			var item;
+			if(allUsedNodes[k].properties.cnr_id) {
+				item = this.custom_nodes[allUsedNodes[k].properties.cnr_id];
+			}
+			else if(allUsedNodes[k].properties.aux_id) {
+				item = aux_id_to_pack[allUsedNodes[k].properties.aux_id];
+			}
+
+			if(item)
 			    hashMap[item.hash] = true;
 		}
 
@@ -1670,6 +1801,8 @@ export class CustomNodesManager {
 	}
 
 	async loadData(show_mode = ShowMode.NORMAL) {
+		const isElectron = 'electronAPI' in window;
+
 		this.show_mode = show_mode;
 		console.log("Show mode:", show_mode);
 
@@ -1689,6 +1822,11 @@ export class CustomNodesManager {
 		}
 		
 		const { channel, node_packs } = res.data;
+
+		if(isElectron) {
+			delete node_packs['comfyui-manager'];
+		}
+
 		this.channel = channel;
 		this.mode = mode;
 		this.custom_nodes = node_packs;
@@ -1723,9 +1861,14 @@ export class CustomNodesManager {
 				hashMap = await this.getAlternatives();
 			} else if(this.show_mode == ShowMode.FAVORITES) {
 				hashMap = await this.getFavorites();
+			} else if(this.show_mode == ShowMode.IN_WORKFLOW) {
+				hashMap = await this.getNodepackInWorkflow();
 			}
 			filterItem.hashMap = hashMap;
-			filterItem.hasData = true;
+
+			if(this.show_mode != ShowMode.IN_WORKFLOW) {
+				filterItem.hasData = true;
+			}
 		}
 
 		for(let k in node_packs) {
@@ -1777,7 +1920,6 @@ export class CustomNodesManager {
 						case "disabled":
 							filterTypes.add("installed");
 							break;
-
 						case "not-installed":
 							filterTypes.add("not-installed");
 							break;
@@ -1889,7 +2031,7 @@ export class CustomNodesManager {
 
 	showRestart() {
 		this.element.querySelector(".cn-manager-restart").style.display = "block";
-		this.need_restart = true;
+		setNeedRestart(true);
 	}
 
 	showStop() {

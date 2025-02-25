@@ -12,6 +12,7 @@ import subprocess
 import sys
 import re
 import logging
+import platform
 
 
 cache_lock = threading.Lock()
@@ -20,6 +21,16 @@ comfyui_manager_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '
 cache_dir = os.path.join(comfyui_manager_path, '.cache')  # This path is also updated together in **manager_core.update_user_directory**.
 
 use_uv = False
+
+
+def add_python_path_to_env():
+    if platform.system() != "Windows":
+        sep = ':'
+    else:
+        sep = ';'
+
+    os.environ['PATH'] = os.path.dirname(sys.executable)+sep+os.environ['PATH']
+
 
 def make_pip_cmd(cmd):
     if use_uv:
@@ -373,3 +384,23 @@ def sanitize(data):
 def sanitize_filename(input_string):
     result_string = re.sub(r'[^a-zA-Z0-9_]', '_', input_string)
     return result_string
+
+
+def robust_readlines(fullpath):
+    import chardet
+    try:
+        with open(fullpath, "r") as f:
+            return f.readlines()
+    except:
+        encoding = None
+        with open(fullpath, "rb") as f:
+            raw_data = f.read()
+            result = chardet.detect(raw_data)
+            encoding = result['encoding']
+
+        if encoding is not None:
+            with open(fullpath, "r", encoding=encoding) as f:
+                return f.readlines()
+
+        print(f"[ComfyUI-Manager] Failed to recognize encoding for: {fullpath}")
+        return []
